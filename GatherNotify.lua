@@ -1,17 +1,23 @@
 GN = {}
-GN.origErrorFunc
 
-local mining_levels = {
+-- Table format: {level, prettyName, objectName}
+-- If prettyName is nil, it's only used for modifying object tooltips, it should not be reported in chat that it is now mineable
+-- If objectName is missing, it's assumed that it's the same as prettyName (as in most herbs)
+
+GN.mining_levels = {
 	{1,   "Copper", 		"Copper Vein"},
-	{50,  "Tin",			"Tin Vein"},
-	{65,  "Silver",			"Silver Vein"},
+	{1,   "Tin",			"Tin Vein"},
+	{1,   nil,				"Black Blood of Yogg-Saron"},
+	{50,  "Silver",			"Silver Vein"},
+	{50,  nil,				"Incendicite Mineral Vein"},
+	{65,  nil, 				"Lesser Bloodstone Deposit"},
 	{100, "Iron",			"Iron Deposit"},
 	{115, "Gold",			"Gold Vein"},
 	{150, "Mithril",		"Mithril Deposit"},
 	{150, nil,				"Ooze Covered Mithril Deposit"},
 	{165, "Truesilver",		"Truesilver Deposit"},
 	{165, nil,				"Ooze Covered Truesilver Deposit"},
-	{165, "Dark Iron",		"Dark Iron Deposit"},
+	{175, "Dark Iron",		"Dark Iron Deposit"},
 	{200, "Small Thorium",	"Small Thorium Vein"},
 	{200, nil,				"Ooze Covered Thorium Vein"},
 	{215, "Rich Thorium",	"Rich Thorium Vein"},
@@ -34,24 +40,26 @@ local mining_levels = {
 	{450, "Titanium",		"Titanium Vein"},
 	{475, "Elementium",		"Elementium Vein"},
 	{500, "Rich Elementium","Rich Elementium Vein"},
-	{500, "Ghost Iron",		"Ghost Iron Deposit"},
 	{525, "Pyrite",			"Pyrite Deposit"},
 	{525, "Rich Pyrite",	"Rich Pyrite Deposit"},
-	{550, "Rich Ghost Iron","Rich Ghost Iron Deposit"},
-	{550, "Kyparite",		"Kyparite Deposit"},
-	{575, "Rich Kyparite",	"Rich Kyparite Deposit"},
-	{600, "Trillium",		"Trillium Vein"},
-	{600, "Rich Trillium",	"Rich Trillium Vein"}
+	
+	{1, "Ghost Iron",		"Ghost Iron Deposit"},		-- Originally 500
+	{1, "Rich Ghost Iron",	"Rich Ghost Iron Deposit"},	-- Originally 550
+	{1, "Kyparite",			"Kyparite Deposit"},		-- Originally 550
+	{1, "Rich Kyparite",	"Rich Kyparite Deposit"},	-- Originally 575
+	{1, "Trillium",			"Trillium Vein"},			-- Originally 600
+	{1, "Rich Trillium",	"Rich Trillium Vein"}		-- Originally 600
 }
 
-local herbalism_levels = {
+GN.herbalism_levels = {
 	{1,   "Peacebloom"},
 	{1,   "Silverleaf"},
 	{1,   "Earthroot"},
 	{1,   "Mageroyal"},
-	{70,  "Briarthorn"},
+	{1,   "Briarthorn"},
+	{1,   "Bruiseweed"},
+	{1,   nil, "Bloodthistle"},
 	{85,  "Stranglekelp"},
-	{85,  "Bruiseweed"},
 	{105, "Grave Moss"},
 	{115, "Wild Steelbloom"},
 	{125, "Kingsblood"},
@@ -97,17 +105,18 @@ local herbalism_levels = {
 	{450, "Frost Lotus"},
 	{475, "Heartblossom"},
 	{500, "Whiptail"},
-	{500, "Green Tea Leaf"},
 	{525, "Twilight Jasmine"},
-	{525, "Rain Poppy"},
-	{545, "Silkweed"},
-	{550, "Golden Lotus"},
-	{575, "Snow Lily"},
-	{575, "Sha-Touched Herb"},
-	{600, "Fool's Cap"}
+	
+	{1, 	"Green Tea Leaf"},		-- Originally 500
+	{1, 	"Rain Poppy"},			-- Originally 525
+	{1, 	"Silkweed"},			-- Originally 545
+	{1, 	"Golden Lotus"},		-- Originally 550
+	{1, 	"Snow Lily"},			-- Originally 575
+	{1,		"Sha-Touched Herb"},	-- Originally 575
+	{1, 	"Fool's Cap"}			-- Originally 600
 }
 
-local skinning_levels = {
+GN.skinning_levels = {
 	{1, nil, "1"},
 	{1, nil, "2"},
 	{1, nil, "3"},
@@ -254,13 +263,13 @@ end
 function GN.OnCommand(cmd)						-- Fired when a slash command is entered
 	cmd = cmd:lower()
 	
-	if cmd == "s" or cmd == "skinning" then
+	if cmd == "s" or cmd == "skin" or cmd == "skinning" then
 		GN.PrintHighestNode("skinning")
 	
-	elseif cmd == "m" or cmd == "mining" then
+	elseif cmd == "m" or cmd == "mine" or cmd == "mining" then
 		GN.PrintHighestNode("mining")
 	
-	elseif cmd == "h" or cmd == "herbalism" then
+	elseif cmd == "h" or cmd == "herb" or cmd == "herbalism" then
 		GN.PrintHighestNode("herbalism")
 	
 	elseif cmd == "v" or cmd == "ver" or cmd == "version" then
@@ -318,9 +327,9 @@ end
 
 function GN.GetHighestNode(skill,level)			-- Get the highest herb/mine/corpse usable at the current skill level
 	local tbl
-		if string.lower(skill) == "skinning" then tbl = skinning_levels
-	elseif string.lower(skill) == "mining" then tbl = mining_levels
-	elseif string.lower(skill) == "herbalism" then tbl = herbalism_levels
+		if string.lower(skill) == "skinning" then tbl = GN.skinning_levels
+	elseif string.lower(skill) == "mining" then tbl = GN.mining_levels
+	elseif string.lower(skill) == "herbalism" then tbl = GN.herbalism_levels
 	  else return
 	end
 	
@@ -334,7 +343,7 @@ function GN.GetHighestNode(skill,level)			-- Get the highest herb/mine/corpse us
 	return GN.GetAllGatherable(skill,highest)
 end
 
-function GN.PrintHighestNode(skill)					-- Print the highest herb/mine/corpse usable at the current skill level
+function GN.PrintHighestNode(skill)				-- Print the highest herb/mine/corpse usable at the current skill level
 	local level,temp = GN.GetProfessionLevel(skill)
 	
 	if level then
@@ -364,9 +373,9 @@ end
 
 function GN.GetAllGatherable(skill,level)		-- Get a list of all herbs/mines/corpses usable at the current skill level
 	local tbl
-		if string.lower(skill) == "skinning" then tbl = skinning_levels
-	elseif string.lower(skill) == "mining" then tbl = mining_levels
-	elseif string.lower(skill) == "herbalism" then tbl = herbalism_levels
+		if string.lower(skill) == "skinning" then tbl = GN.skinning_levels
+	elseif string.lower(skill) == "mining" then tbl = GN.mining_levels
+	elseif string.lower(skill) == "herbalism" then tbl = GN.herbalism_levels
 	  else return nil
 	end
 	
@@ -385,9 +394,9 @@ end
 function GN.GetRequiredLevel(skill,name)		-- Get the required herbalism/mining/skinning level required to use a node/corpse
 	name = tostring(name)
 	local tbl,ret
-		if string.lower(skill) == "skinning" then tbl = skinning_levels
-	elseif string.lower(skill) == "mining" then tbl = mining_levels
-	elseif string.lower(skill) == "herbalism" then tbl = herbalism_levels
+		if string.lower(skill) == "skinning" then tbl = GN.skinning_levels
+	elseif string.lower(skill) == "mining" then tbl = GN.mining_levels
+	elseif string.lower(skill) == "herbalism" then tbl = GN.herbalism_levels
 	  else return
 	end
 	
@@ -461,8 +470,9 @@ end
 
 -- Debug functions
 
-function GN.err(skill,level)
-	GN.OnEvent(nil,"UI_ERROR_MESSAGE",string.format("Requires %s %s",skill,level))
+function GN.err(skill,level)					-- Generates a fake error message - GN.err("mining", "500) etc.
+	--GN.OnEvent(nil,"UI_ERROR_MESSAGE",string.format("Requires %s %s",skill,level))
+	UIErrorsFrame:GetScript("OnEvent")(UIErrorsFrame,"UI_ERROR_MESSAGE", format("Requires %s %s", skill, level))
 end
 
 -- Initialize the addon (not using XML)
