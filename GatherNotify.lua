@@ -273,7 +273,7 @@ function GN.OnCommand(cmd)						-- Fired when a slash command is entered
 		GN.PrintHighestNode("herbalism")
 	
 	elseif cmd == "v" or cmd == "ver" or cmd == "version" then
-		GN.Msg("GatherNotify version: "..GetAddOnMetadata("GatherNotify","Version"))
+		GN.Msg(format("GatherNotify version: %s (%s)", GetAddOnMetadata("GatherNotify","Version"), GetAddOnMetadata("GatherNotify","X-Date")))
 	
 	else
 		GN.Msg("/gn skinning - Print highest level creature you can skin")
