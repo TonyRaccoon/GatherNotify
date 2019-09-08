@@ -1,8 +1,8 @@
-## Interface: 60000
+## Interface: 11302
 ## Title: GatherNotify
 ## Notes: Adds required/current profession level to herb/mineral/skinning tooltips, notifies you when you can pick, mine, or skin something new, and improves "Requires <skill> <level>" errors
 ## Author: Foxthorn
-## Version: 1.51
-## X-Date: October 15, 2014
+## Version: 1.6
+## X-Date: September 7, 2019
 
 GatherNotify.lua
