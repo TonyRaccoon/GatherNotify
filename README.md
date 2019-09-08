@@ -16,6 +16,5 @@ Commands: **/gn** or **/gnotify** or **/gathernotify**
 * **/gn** herbalism - Show highest herb you can pick
 * **/gn** version - Show addon version
 
-On Curse: [http://www.curse.com/addons/wow/gathernotify](http://www.curse.com/addons/wow/gathernotify)  
-On CurseForge: [http://wow.curseforge.com/addons/gathernotify/](http://wow.curseforge.com/addons/gathernotify/)  
+On CurseForge: [http://curseforge.com/wow/addons/gathernotify](http://curseforge.com/wow/addons/gathernotify)  
 On GitHub: [https://github.com/tony311/GatherNotify](https://github.com/TonyRaccoon/GatherNotify)
